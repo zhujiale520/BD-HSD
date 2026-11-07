@@ -1,0 +1,242 @@
+{
+  "schema": "bd-hsd-public-results/v1",
+  "project": "BD-HSD",
+  "metric_definition": {
+    "latency_reduction_percent": "100 * (shared_time - decoupled_time) / shared_time; positive means decoupled is faster",
+    "primary_interval": "95% paired chunk bootstrap interval; 10000 resamples",
+    "throughput": "generated tokens divided by measured generation time"
+  },
+  "primary_formal": {
+    "source_label": "E05/verified_v2",
+    "hardware": "NVIDIA GeForce RTX 4090",
+    "software": {
+      "torch": "2.8.0",
+      "vllm": "0.1.dev1+g38b8f1a67.precompiled",
+      "transformers": "4.56.0",
+      "cuda_driver": "590.48.01"
+    },
+    "decode": {
+      "dtype": "bfloat16",
+      "sampling": "greedy",
+      "max_new_tokens": 256,
+      "batch_sizes": [1, 4]
+    },
+    "workload": {
+      "unique_requests_per_model": 128,
+      "independent_repeats": 3,
+      "models": ["Qwen3-8B", "Llama-3.1-8B"],
+      "draft": "EAGLE-3 checkpoint",
+      "comparison": "selected decoupled budget versus selected shared budget"
+    },
+    "verification": {
+      "analysis_status": "ACCEPTED",
+      "accepted_analysis": "verified_v2",
+      "analysis_validation": "PASS",
+      "independent_verification": "PASS",
+      "record_count": 9216,
+      "process_count": 36,
+      "cell_count": 24,
+      "selected_cells_output_gate": "PASS",
+      "selected_cells_mismatch_count": 0
+    },
+    "cells": [
+      {
+        "model": "Qwen3-8B",
+        "batch_size": 1,
+        "shared_budget": {"retrieval": 6, "eagle": 6},
+        "decoupled_budget": {"retrieval": 12, "eagle": 2},
+        "shared_time_seconds": 344.532550,
+        "decoupled_time_seconds": 247.496417,
+        "shared_tps": 47.493335,
+        "decoupled_tps": 66.114088,
+        "paired_process_reduction_percent": 28.245316,
+        "chunk_median_reduction_percent": 28.090856,
+        "bootstrap_ci95_percent": [26.060300, 30.352354]
+      },
+      {
+        "model": "Qwen3-8B",
+        "batch_size": 4,
+        "shared_budget": {"retrieval": 6, "eagle": 6},
+        "decoupled_budget": {"retrieval": 12, "eagle": 2},
+        "shared_time_seconds": 148.847144,
+        "decoupled_time_seconds": 114.956732,
+        "shared_tps": 109.931568,
+        "decoupled_tps": 142.340511,
+        "paired_process_reduction_percent": 22.319912,
+        "chunk_median_reduction_percent": 22.714937,
+        "bootstrap_ci95_percent": [19.943929, 25.842119]
+      },
+      {
+        "model": "Llama-3.1-8B",
+        "batch_size": 1,
+        "shared_budget": {"retrieval": 6, "eagle": 6},
+        "decoupled_budget": {"retrieval": 12, "eagle": 4},
+        "shared_time_seconds": 318.924876,
+        "decoupled_time_seconds": 262.318777,
+        "shared_tps": 62.710693,
+        "decoupled_tps": 76.243112,
+        "paired_process_reduction_percent": 17.733364,
+        "chunk_median_reduction_percent": 17.748903,
+        "bootstrap_ci95_percent": [15.841687, 19.736946]
+      },
+      {
+        "model": "Llama-3.1-8B",
+        "batch_size": 4,
+        "shared_budget": {"retrieval": 6, "eagle": 6},
+        "decoupled_budget": {"retrieval": 12, "eagle": 4},
+        "shared_time_seconds": 133.511758,
+        "decoupled_time_seconds": 116.129965,
+        "shared_tps": 149.799541,
+        "decoupled_tps": 172.220839,
+        "paired_process_reduction_percent": 13.018923,
+        "chunk_median_reduction_percent": 13.053125,
+        "bootstrap_ci95_percent": [10.177120, 16.119281]
+      }
+    ],
+    "limits": [
+      "The interval conditions on the measured queue and fixed four-request chunks for batch 4.",
+      "Process order was deterministic; three repeats do not remove all temporal drift.",
+      "The selected-domain search used unequal numbers of shared and decoupled screen points.",
+      "Ordinary target outputs differed, so no strict same-output speed claim versus ordinary target is made.",
+      "The result is a same-engine operating-point measurement, not a cross-system baseline ranking."
+    ]
+  },
+  "a100_replication": {
+    "source_label": "20261019_balanced_budget/frozen_metadata",
+    "hardware": "NVIDIA A100-SXM4-80GB",
+    "scope": "Separate single-device replication on a frozen 32-request evaluation subset; not pooled with the RTX 4090 primary analysis.",
+    "independent_repeats": 3,
+    "selected_cells_output_mismatch_count": 0,
+    "cells": [
+      {
+        "model": "Qwen3-8B",
+        "batch_size": 1,
+        "shared_budget": {"retrieval": 8, "eagle": 8},
+        "decoupled_budget": {"retrieval": 12, "eagle": 2},
+        "shared_time_seconds": [73.348873, 74.767000, 83.128807],
+        "decoupled_time_seconds": [62.352163, 56.674596, 57.587491],
+        "reduction_by_repeat_percent": [14.992337, 24.198380, 30.724987],
+        "median_reduction_percent": 24.198380
+      },
+      {
+        "model": "Qwen3-8B",
+        "batch_size": 4,
+        "shared_budget": {"retrieval": 8, "eagle": 8},
+        "decoupled_budget": {"retrieval": 12, "eagle": 2},
+        "shared_time_seconds": [42.422296, 36.338272, 36.891868],
+        "decoupled_time_seconds": [32.975488, 32.354836, 28.400444],
+        "reduction_by_repeat_percent": [22.268497, 10.962095, 23.017061],
+        "median_reduction_percent": 22.268497
+      },
+      {
+        "model": "Llama-3.1-8B",
+        "batch_size": 1,
+        "shared_budget": {"retrieval": 8, "eagle": 8},
+        "decoupled_budget": {"retrieval": 12, "eagle": 4},
+        "shared_time_seconds": [79.982474, 80.779754, 87.179872],
+        "decoupled_time_seconds": [70.731990, 80.084190, 79.860166],
+        "reduction_by_repeat_percent": [11.565639, 0.861063, 8.396097],
+        "median_reduction_percent": 8.396097
+      },
+      {
+        "model": "Llama-3.1-8B",
+        "batch_size": 4,
+        "shared_budget": {"retrieval": 8, "eagle": 8},
+        "decoupled_budget": {"retrieval": 12, "eagle": 2},
+        "shared_time_seconds": [44.327326, 42.474403, 42.468385],
+        "decoupled_time_seconds": [35.582978, 40.052651, 38.489875],
+        "reduction_by_repeat_percent": [19.726767, 5.701673, 9.368171],
+        "median_reduction_percent": 9.368171
+      }
+    ]
+  },
+  "budget_state_ablation": {
+    "source_label": "CanItEdit P0 core ablation",
+    "hardware": "NVIDIA GeForce RTX 4090",
+    "model": "Qwen3-8B",
+    "workload": "CanItEdit frozen holdout, 40 requests, batch 1",
+    "paired_runs": 6,
+    "correctness_gate": "40/40 requests matched the fixed EAGLE-3 reference for every configuration",
+    "comparisons": [
+      {
+        "from": "K3/E3 shadow sync",
+        "to": "K10/E10 shadow sync",
+        "reduction_percent": 27.46,
+        "bootstrap_ci95_percent": [27.11, 27.88],
+        "positive_pairs": "6/6"
+      },
+      {
+        "from": "K10/E10 shadow sync",
+        "to": "K10/E3 shadow sync",
+        "reduction_percent": 21.52,
+        "bootstrap_ci95_percent": [21.04, 22.14],
+        "positive_pairs": "6/6"
+      },
+      {
+        "from": "K10/E3 shadow sync",
+        "to": "K10/E3 bounded debt",
+        "reduction_percent": 4.43,
+        "bootstrap_ci95_percent": [4.14, 4.62],
+        "positive_pairs": "6/6"
+      },
+      {
+        "from": "K3/E3 shadow sync",
+        "to": "complete BD-HSD",
+        "reduction_percent": 45.65,
+        "bootstrap_ci95_percent": [45.38, 45.83],
+        "positive_pairs": "6/6"
+      }
+    ],
+    "exact_two_sided_wilcoxon_p": 0.03125,
+    "telemetry": {
+      "bounded_debt_skipped_draft_steps": 3970,
+      "peak_allocated_gib_approx": 20.0,
+      "peak_reserved_gib_approx": 21.7
+    }
+  },
+  "component_cost_attribution": {
+    "source_label": "BD-HSD component cost attribution",
+    "hardware": "NVIDIA GeForce RTX 4090",
+    "model": "Qwen3-8B",
+    "batch_size": 1,
+    "fixed_retrieval_budget": 10,
+    "eagle_time_seconds_at_horizon": {"1": 1.447, "10": 10.497},
+    "fixed_eagle_budget": 3,
+    "retrieval_route_time_seconds_range_for_k3_to_k10": [0.09, 0.11],
+    "verification_rounds": {"k3": 1245, "k10": 974},
+    "bounded_debt": {
+      "eagle_executions_reduction_percent": 32.63,
+      "eagle_time_reduction_percent": 32.02,
+      "end_to_end_reduction_percent": 4.56,
+      "correctness": "40/40"
+    }
+  },
+  "mixed_batch_comparison": {
+    "source_label": "P0 mixed-batch comparison against same-engine CopySpec-10",
+    "hardware": "NVIDIA GeForce RTX 4090",
+    "model": "Qwen3-8B",
+    "correctness_gate": "target-only token output gate",
+    "entries": [
+      {"dataset": "InstructCoder", "batch_size": 1, "reduction_percent": 21.30, "positive_pairs": "6/6", "cohort_note": "earlier paired cohort"},
+      {"dataset": "InstructCoder", "batch_size": 4, "reduction_percent": 26.26, "bootstrap_ci95_percent": [26.02, 26.64], "positive_pairs": "6/6"},
+      {"dataset": "InstructCoder", "batch_size": 8, "reduction_percent": 22.45, "bootstrap_ci95_percent": [22.14, 22.51], "positive_pairs": "6/6"},
+      {"dataset": "CanItEdit", "batch_size": 1, "reduction_percent": 16.29, "positive_pairs": "12/12", "cohort_note": "earlier paired cohort"},
+      {"dataset": "CanItEdit", "batch_size": 4, "reduction_percent": 16.55, "bootstrap_ci95_percent": [15.44, 21.45], "positive_pairs": "6/6"},
+      {"dataset": "CanItEdit", "batch_size": 8, "reduction_percent": 18.18, "bootstrap_ci95_percent": [17.01, 19.10], "positive_pairs": "6/6"}
+    ],
+    "interpretation": "Batches 4 and 8 use strict target-only complete-batch gates; batch 1 uses an earlier cohort and should not be used to fit a batch trend."
+  },
+  "development_budget_confirmation": {
+    "source_label": "InstructCoder shared versus decoupled budget confirmation",
+    "hardware": "NVIDIA GeForce RTX 4090",
+    "model": "Qwen3-8B",
+    "batch_size": 1,
+    "selection_split": "IDs 0-19 for selection, IDs 20-39 for confirmation",
+    "shared_budget": {"retrieval": 6, "eagle": 6},
+    "decoupled_budget": {"retrieval": 10, "eagle": 2},
+    "reduction_percent": 18.60,
+    "bootstrap_ci95_percent": [18.55, 18.88],
+    "positive_pairs": "6/6",
+    "reference_gate": "480 generations matched the EAGLE reference token by token"
+  }
+}

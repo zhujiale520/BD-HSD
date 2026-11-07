@@ -16,6 +16,7 @@ results/raw/
 results/*.jsonl
 results/*.json
 results/*.csv
+!results/summary.json
 logs/
 
 # Large model and build files should stay outside the source repository.
@@ -36,4 +37,3 @@ logs/
 .vscode/
 *.code-workspace
 .DS_Store
-

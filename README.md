@@ -12,6 +12,16 @@ BD-HSD 将便宜但覆盖不稳定的 N-gram 检索候选，与覆盖更稳定�
 - mixed batch 下的选择性 EAGLE 子批、ragged attention metadata 压缩和结果 scatter；
 - 目标模型验证、拒绝尾部处理、逐 token 正确性门控和运行时遥测。
 
+## Results at a glance
+
+- RTX 4090 主实验：Qwen3-8B/Llama-3.1-8B，128 个请求，batch 1/4；解耦预算相对选定共享预算降低端到端延迟 **13.05%–28.09%**，四个 95% bootstrap 区间均为正。
+- CanItEdit 消融：`K10/E10 → K10/E3` 降低 **21.52%**，一步有界状态债务再降低 **4.43%**；6/6 配对正向，40/40 请求通过逐 token 门控。
+- A100 独立复验：Qwen3-8B/Llama-3.1-8B 的四个格子中位降低 **8.40%–24.20%**，与 RTX 4090 主实验分开统计。
+
+完整结果表、成本归因、复验口径和精选图表见 [results/BD-HSD-results.md](results/BD-HSD-results.md)。
+
+![BD-HSD primary result](results/figures/formal_primary_reduction.png)
+
 ## Architecture
 
 ```mermaid
@@ -50,7 +60,7 @@ BD-HSD/
 ├── tests/v1/spec_decode/        # proposer、路由和稀疏 batch CPU 测试
 ├── configs/                     # Qwen3-8B/EAGLE-3 配置与消融矩阵
 ├── docs/                        # 架构、正确性和实验协议
-└── results/                     # 只保存结果格式说明，运行产物默认忽略
+└── results/                     # 主实验、消融、复验结果与公开图表
 ```
 
 核心实现入口：
@@ -157,16 +167,20 @@ python scripts/analyze_budget_ablation.py \
 - [架构与执行路径](docs/architecture.md)
 - [KV Cache 与正确性不变量](docs/correctness.md)
 - [实验协议与指标定义](docs/experiments.md)
+- [实验结果与图表](results/BD-HSD-results.md)
+- [简历项目描述](docs/resume.md)
 
 ## Scope
 
-当前 overlay 面向文本、eager、greedy speculative decoding。selective EAGLE sub-batch 对 cross-attention、DCP 和 multimodal 输入有明确限制；state replay 是 opt-in 的研究扩展，默认路径不依赖它。模型权重、数据集、虚拟环境、原始机器日志和生成的图表不进入仓库。
+当前 overlay 面向文本、eager、greedy speculative decoding。selective EAGLE sub-batch 对 cross-attention、DCP 和 multimodal 输入有明确限制；state replay 是 opt-in 的研究扩展，默认路径不依赖它。模型权重、数据集、虚拟环境和原始机器日志不进入仓库；公开展示所需的聚合结果和精选图表保存在 `results/`。
 
 ## Resume-ready description
 
 **BD-HSD — Budget-Decoupled Hybrid Speculative Decoding**
 
 - Designed and implemented a vLLM speculative decoding runtime that combines N-gram retrieval with EAGLE-3 fallback and target-model batched verification.
-- Decoupled retrieval and neural speculation budgets, adding same-engine paired ablations for acceptance length, token latency, throughput and GPU execution cost.
-- Implemented request-level EAGLE state-debt accounting, bounded catch-up, KV Cache lifecycle management and selective draft sub-batching for heterogeneous batches.
-- Built token-level correctness gates and routing/phase telemetry, and evaluated Qwen3-8B on RTX 4090/A100-class GPUs with PyTorch, CUDA and vLLM.
+- On RTX 4090, paired Qwen3-8B/Llama-3.1-8B experiments reduced latency by 13.05%–28.09% versus selected shared budgets across batch sizes 1/4, with positive 95% bootstrap intervals.
+- Isolated the mechanism in a CanItEdit ablation: budget decoupling reduced latency by 21.52%, and one-step bounded state debt added 4.43%; all six pairs passed the token-level correctness gate.
+- Implemented EAGLE state-debt accounting, KV Cache lifecycle management and selective draft sub-batching; component tracing reduced EAGLE executions by 32.63% and EAGLE time by 32.02%.
+
+完整数字、A100 独立复验和图表见 [实验结果](results/BD-HSD-results.md)，可直接复制的中英文简历版本见 [docs/resume.md](docs/resume.md)。
