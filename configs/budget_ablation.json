@@ -1,0 +1,29 @@
+{
+  "description": "Four-way same-engine BD-HSD budget and state ablation",
+  "policies": [
+    {
+      "name": "shared_k3_e3_shadow0",
+      "retrieval_budget": 3,
+      "eagle_budget": 3,
+      "max_draft_skip_steps": 0
+    },
+    {
+      "name": "shared_k10_e10_shadow0",
+      "retrieval_budget": 10,
+      "eagle_budget": 10,
+      "max_draft_skip_steps": 0
+    },
+    {
+      "name": "decoupled_k10_e3_shadow0",
+      "retrieval_budget": 10,
+      "eagle_budget": 3,
+      "max_draft_skip_steps": 0
+    },
+    {
+      "name": "bdsh_k10_e3_debt1",
+      "retrieval_budget": 10,
+      "eagle_budget": 3,
+      "max_draft_skip_steps": 1
+    }
+  ]
+}

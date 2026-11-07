@@ -1,0 +1,39 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.venv/
+venv/
+env/
+
+# Local models, datasets and generated benchmark artifacts.
+models/
+checkpoints/
+data/local/
+results/runs/
+results/raw/
+results/*.jsonl
+results/*.json
+results/*.csv
+logs/
+
+# Large model and build files should stay outside the source repository.
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.so
+*.a
+*.zip
+*.tar
+*.tar.gz
+
+# Local editor and machine metadata.
+.idea/
+.vscode/
+*.code-workspace
+.DS_Store
+

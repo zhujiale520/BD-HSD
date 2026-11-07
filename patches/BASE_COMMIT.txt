@@ -1,0 +1,4 @@
+vLLM base revision
+==================
+7ba609234a62ef0aa43d805149fa1a0af5990c20
+branch: perf/e2e-dm
