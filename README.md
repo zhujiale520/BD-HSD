@@ -24,6 +24,8 @@ BD-HSD 将便宜但覆盖不稳定的 N-gram 检索候选，与覆盖更稳定�
 
 ## Architecture
 
+![BD-HSD 中文架构图](docs/figures/bd-hsd-architecture-zh.png)
+
 ```mermaid
 flowchart LR
     A[Target token history] --> B[N-gram lookup]
